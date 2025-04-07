@@ -3,23 +3,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'event_detail.dart';
 
+/// This widget displays a calendar and lists all the events for the selected day.
+/// The user can tap on any day to view the events for that date.
 class CalendarPage extends StatefulWidget {
   @override
   _CalendarPageState createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
+  // A map that holds the events grouped by their date (only date, no time)
   late Map<DateTime, List<Map<String, dynamic>>> _events;
+
+  // The currently focused month/week in the calendar view
   DateTime _focusedDate = DateTime.now();
+
+  // The specific date the user has selected (can be null initially)
   DateTime? _selectedDate;
 
   @override
   void initState() {
     super.initState();
-    _events = {};
-    _loadEvents();
+    _events = {}; // Initialize empty map
+    _loadEvents(); // Load events from Firestore
   }
 
+  /// Loads events from Firestore and groups them by date
   Future<void> _loadEvents() async {
     try {
       final snapshot = await FirebaseFirestore.instance.collection('events').get();
@@ -29,8 +37,10 @@ class _CalendarPageState extends State<CalendarPage> {
         final data = doc.data();
         final dateField = data['date'];
 
+        // Skip events with no valid date
         if (dateField == null) continue;
 
+        // Parse the date field (could be a Timestamp or String)
         DateTime date;
         if (dateField is Timestamp) {
           date = dateField.toDate();
@@ -40,11 +50,13 @@ class _CalendarPageState extends State<CalendarPage> {
           continue;
         }
 
-        final eventId = doc.id;
+        // Convert the date to a format without time (used as key)
         final dateOnly = DateTime(date.year, date.month, date.day);
+
+        // Add the event to the list for that day
         eventMap[dateOnly] ??= [];
         eventMap[dateOnly]!.add({
-          'id': eventId,
+          'id': doc.id,
           'title': data['title'] ?? 'ללא כותרת',
           'date': date,
           'description': data['description'] ?? '',
@@ -53,6 +65,7 @@ class _CalendarPageState extends State<CalendarPage> {
         });
       }
 
+      // Update the state with the loaded events
       setState(() {
         _events = eventMap;
       });
@@ -61,6 +74,7 @@ class _CalendarPageState extends State<CalendarPage> {
     }
   }
 
+  /// Returns the list of events for a given day
   List<Map<String, dynamic>> _getEventsForDay(DateTime day) {
     final dateOnly = DateTime(day.year, day.month, day.day);
     return _events[dateOnly] ?? [];
@@ -68,20 +82,22 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Get events for the currently selected day
     final selectedDayEvents = _selectedDate != null ? _getEventsForDay(_selectedDate!) : [];
 
     return Directionality(
-      textDirection: TextDirection.rtl,
+      textDirection: TextDirection.rtl, // Makes everything RTL for Hebrew
       child: Scaffold(
-        backgroundColor: const Color(0xFFF6F6F6),
+        backgroundColor: const Color(0xFFF6F6F6), // Light gray background
         body: Column(
           children: [
+            // The calendar widget
             TableCalendar(
               firstDay: DateTime(2000),
               lastDay: DateTime(2100),
               focusedDay: _focusedDate,
               selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
-              eventLoader: _getEventsForDay,
+              eventLoader: _getEventsForDay, // Show markers on dates with events
               calendarStyle: CalendarStyle(
                 markerDecoration: BoxDecoration(
                   color: const Color.fromARGB(255, 44, 39, 182),
@@ -98,12 +114,15 @@ class _CalendarPageState extends State<CalendarPage> {
               ),
               onDaySelected: (selectedDay, focusedDay) {
                 setState(() {
-                  _selectedDate = selectedDay;
-                  _focusedDate = focusedDay;
+                  _selectedDate = selectedDay; // Update selected day
+                  _focusedDate = focusedDay;   // Keep focus in sync
                 });
               },
             ),
+
             const Divider(),
+
+            // Show events of the selected day
             Expanded(
               child: selectedDayEvents.isEmpty
                   ? Center(
@@ -123,6 +142,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
                         return GestureDetector(
                           onTap: () {
+                            // Navigate to event details page
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -146,7 +166,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                // Title
+                                // Event title
                                 Text(
                                   event['title'] ?? 'ללא כותרת',
                                   style: const TextStyle(
@@ -157,7 +177,8 @@ class _CalendarPageState extends State<CalendarPage> {
                                   textAlign: TextAlign.right,
                                 ),
                                 const SizedBox(height: 8),
-                                // Time Row
+
+                                // Event time with clock icon
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -186,4 +207,3 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 }
-
