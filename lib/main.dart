@@ -9,6 +9,8 @@ import 'package:intl/date_symbol_data_local.dart'; // Import for locale initiali
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'; // Notifications
 import 'package:timezone/data/latest.dart' as tz; // Timezone data
 import 'package:timezone/timezone.dart' as tz; // Timezone conversion
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+
 
 // Initialize the notifications plugin
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -20,6 +22,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(); // Initialize Firebase
   await initializeDateFormatting('he'); // Initialize Hebrew locale for intl
+  await AndroidAlarmManager.initialize(); // אתחול
+
 
   // Initialize Timezone
   tz.initializeTimeZones();

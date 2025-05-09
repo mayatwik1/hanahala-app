@@ -44,7 +44,8 @@ class EventDetailPage extends StatelessWidget {
     );
   }
 
-  void _scheduleReminder(BuildContext context, String title, DateTime dateTime) async {
+  void _scheduleReminder(
+      BuildContext context, String title, DateTime dateTime) async {
     final selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -84,9 +85,13 @@ class EventDetailPage extends StatelessWidget {
             UILocalNotificationDateInterpretation.absoluteTime,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('תזכורת הוגדרה לשעה ${selectedTime.format(context)}')),
-      );
+      Future.delayed(Duration(seconds: 3), () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('תזכורת הוגדרה לשעה ${selectedTime.format(context)}')),
+        );
+      });
     }
   }
 
@@ -95,7 +100,8 @@ class EventDetailPage extends StatelessWidget {
     final title = eventData['title'] ?? 'ללא כותרת';
     final description = eventData['description'] ?? 'אין תיאור';
     final location = eventData['location'] ?? 'מיקום לא זמין';
-    final date = (eventData['date'] as DateTime?) ?? DateTime.now(); // Updated to 'date'
+    final date =
+        (eventData['date'] as DateTime?) ?? DateTime.now(); // Updated to 'date'
     final imageUrl = eventData['imageUrl'];
 
     return Scaffold(
@@ -173,7 +179,8 @@ class EventDetailPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.location_on, color: const Color.fromARGB(255, 0, 0, 0)),
+                      Icon(Icons.location_on,
+                          color: const Color.fromARGB(255, 0, 0, 0)),
                       SizedBox(width: 8),
                       Text(
                         location,
@@ -185,10 +192,12 @@ class EventDetailPage extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.calendar_today, color: const Color.fromARGB(255, 0, 0, 0)),
+                      Icon(Icons.calendar_today,
+                          color: const Color.fromARGB(255, 0, 0, 0)),
                       SizedBox(width: 8),
                       Text(
-                        DateFormat('EEEE, MMMM d, yyyy | HH:mm', 'he').format(date),
+                        DateFormat('EEEE, MMMM d, yyyy | HH:mm', 'he')
+                            .format(date),
                         style: TextStyle(fontSize: 16),
                       ),
                     ],
@@ -197,17 +206,22 @@ class EventDetailPage extends StatelessWidget {
                   // Reminder Button (Prettier + Smaller)
                   ElevatedButton.icon(
                     onPressed: () => _scheduleReminder(context, title, date),
-                    icon: Icon(Icons.notifications_active, size: 18, color: Colors.white),
+                    icon: Icon(Icons.notifications_active,
+                        size: 18, color: Colors.white),
                     label: Text(
                       'הזכר לי',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 0, 0, 0),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       elevation: 3,
                     ),
                   ),

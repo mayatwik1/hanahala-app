@@ -1,29 +1,29 @@
 {
-  "project_info": {
-    "project_number": "37781661971",
-    "project_id": "hanahala3-d6542",
-    "storage_bucket": "hanahala3-d6542.firebasestorage.app"
-  },
-  "client": [
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:37781661971:android:1186f41de07fb5b87fd2e6",
-        "android_client_info": {
-          "package_name": "com.example.hanahala3"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD8QhV54fHu3udD_MJyJqsWYMX256-QKvc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
+    "project_info": {
+      "project_number": "37781661971",
+      "project_id": "hanahala3-d6542",
+      "storage_bucket": "hanahala3-d6542.firebasestorage.app"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:37781661971:android:1186f41de07fb5b87fd2e6",
+          "android_client_info": {
+            "package_name": "com.example.hanahala3"
+          }
+        },
+        "oauth_client": [],
+        "api_key": [
+          {
+            "current_key": "AIzaSyD8QhV54fHu3udD_MJyJqsWYMX256-QKvc"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": []
+          }
         }
       }
-    }
-  ],
-  "configuration_version": "1"
-}
+    ],
+    "configuration_version": "1"
+  }
